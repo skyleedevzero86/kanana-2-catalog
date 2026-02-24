@@ -93,9 +93,9 @@ pnpm dev
 
 ```
 .
-├── kanana-api/     # Spring Boot REST API (DDD, Port/Adapter)
-├── kanana-web/     # React SPA (Repository → Hooks → Pages/Components)
-└── kanana2Readme.md
+├── kanana-api/     # Spring Boot REST API
+├── kanana-web/     # React SPA
+└── README.md
 ```
 
 - **kanana-api** 상세: [kanana-api/README.md](kanana-api/README.md) — 패키지 구조, API 명세, 설정
