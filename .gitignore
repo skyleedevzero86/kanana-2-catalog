@@ -30,3 +30,5 @@ kanana/bin/
 kanana/logs/
 kanana/logs/
 kanana-web/pnpm-lock.yaml
+kanana-web/dist/
+kanana-web/build/
