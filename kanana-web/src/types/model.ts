@@ -47,4 +47,5 @@ export interface CompleteRequestDto {
 
 export interface CompleteResponseDto {
   content: string;
+  modelUsed?: string;
 }

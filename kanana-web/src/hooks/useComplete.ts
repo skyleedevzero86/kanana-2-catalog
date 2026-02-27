@@ -4,6 +4,7 @@ import { kananaRepository } from '@/api/kananaRepository';
 
 export function useComplete() {
   const [content, setContent] = useState('');
+  const [modelUsed, setModelUsed] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -11,9 +12,11 @@ export function useComplete() {
     setLoading(true);
     setError(null);
     setContent('');
+    setModelUsed('');
     try {
       const res = await kananaRepository.complete(payload);
       setContent(res.content ?? '');
+      setModelUsed(res.modelUsed ?? '');
     } catch (e) {
       setError(e instanceof Error ? e : new Error(String(e)));
     } finally {
@@ -23,8 +26,9 @@ export function useComplete() {
 
   const reset = useCallback(() => {
     setContent('');
+    setModelUsed('');
     setError(null);
   }, []);
 
-  return { content, loading, error, submit, reset };
+  return { content, modelUsed, loading, error, submit, reset };
 }

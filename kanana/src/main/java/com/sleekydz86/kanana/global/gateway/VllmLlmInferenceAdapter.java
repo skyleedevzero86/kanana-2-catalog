@@ -1,5 +1,6 @@
 package com.sleekydz86.kanana.global.gateway;
 
+import com.sleekydz86.kanana.application.port.CompletionResult;
 import com.sleekydz86.kanana.application.port.LlmInferencePort;
 import com.sleekydz86.kanana.global.exception.LlmInferenceException;
 import com.sleekydz86.kanana.global.gateway.dto.VllmChatResponse;
@@ -44,15 +45,24 @@ public class VllmLlmInferenceAdapter implements LlmInferencePort {
     }
 
     @Override
-    public String complete(String modelId, String message) {
+    public CompletionResult complete(String modelId, String message) {
         String effectiveModel = resolveModelId(modelId);
         var body = buildRequestBody(effectiveModel, message);
         VllmChatResponse response = sendRequest(body, effectiveModel);
-        return extractContent(response, effectiveModel);
+        return new CompletionResult(extractContent(response, effectiveModel), effectiveModel);
     }
 
     private String resolveModelId(String modelId) {
-        return modelId != null && !modelId.isBlank() ? modelId : defaultModelId;
+        String requested = (modelId != null && !modelId.isBlank()) ? modelId : defaultModelId;
+        if (!isLocalUrl(completionUrl) && requested.startsWith("kanana-")) {
+            log.warn("외부 API에서 Kanana 모델 '{}' 요청 → 기본 모델 '{}'로 자동 전환", requested, defaultModelId);
+            return defaultModelId;
+        }
+        return requested;
+    }
+
+    private static boolean isLocalUrl(String url) {
+        return url.contains("localhost") || url.contains("127.0.0.1") || url.contains("0.0.0.0");
     }
 
     private Map<String, Object> buildRequestBody(String model, String message) {

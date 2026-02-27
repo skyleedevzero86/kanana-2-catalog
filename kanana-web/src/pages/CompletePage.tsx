@@ -35,12 +35,13 @@ function isVllmOnlyModel(modelId: string) {
 function CompletePage() {
   const [searchParams] = useSearchParams();
   const { models, loading: modelsLoading } = useModels();
-  const { content, loading: completing, error, submit, reset } = useComplete();
+  const { content, modelUsed, loading: completing, error, submit, reset } = useComplete();
 
   const [selectedModel, setSelectedModel] = useState(searchParams.get('model') ?? '');
   const [message, setMessage] = useState('');
   const [history, setHistory] = useState<Message[]>([]);
   const [lastMessage, setLastMessage] = useState('');
+  const [lastModelUsed, setLastModelUsed] = useState('');
 
   useEffect(() => {
     const param = searchParams.get('model');
@@ -49,9 +50,10 @@ function CompletePage() {
 
   useEffect(() => {
     if (content) {
+      setLastModelUsed(modelUsed);
       setHistory((prev) => [...prev, { role: 'assistant', text: content }]);
     }
-  }, [content]);
+  }, [content, modelUsed]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -71,6 +73,7 @@ function CompletePage() {
     setHistory([]);
     setMessage('');
     setLastMessage('');
+    setLastModelUsed('');
     reset();
   };
 
@@ -204,9 +207,26 @@ function CompletePage() {
         </div>
       )}
 
+      {lastModelUsed && selectedModel && lastModelUsed !== selectedModel && (
+        <p style={{
+          ...warnStyle,
+          marginBottom: '1rem',
+        }}>
+           <strong>{selectedModel}</strong>은 로컬 vLLM 전용 모델입니다.
+          {' '}외부 API 사용 중이므로 <strong>{lastModelUsed}</strong> 모델로 자동 전환하여 응답했습니다.
+        </p>
+      )}
+
       {(history.length > 0 || completing) && (
         <div className="complete-result">
-          <h2>대화 내역</h2>
+          <h2>
+            대화 내역
+            {lastModelUsed && (
+              <span style={{ fontSize: '0.75rem', fontWeight: 400, color: 'var(--color-text-muted)', marginLeft: '0.6rem' }}>
+                모델: {lastModelUsed}
+              </span>
+            )}
+          </h2>
           <div>
             {history.map((msg, i) => (
               <div

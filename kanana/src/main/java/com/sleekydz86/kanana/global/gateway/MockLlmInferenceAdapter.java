@@ -1,5 +1,6 @@
 package com.sleekydz86.kanana.global.gateway;
 
+import com.sleekydz86.kanana.application.port.CompletionResult;
 import com.sleekydz86.kanana.application.port.LlmInferencePort;
 
 import java.time.LocalDateTime;
@@ -8,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 public class MockLlmInferenceAdapter implements LlmInferencePort {
 
     @Override
-    public String complete(String modelId, String message) {
+    public CompletionResult complete(String modelId, String message) {
         String model = (modelId != null && !modelId.isBlank())
                 ? modelId : "kanana-2-30b-a3b-instruct-2601";
 
@@ -42,7 +43,7 @@ public class MockLlmInferenceAdapter implements LlmInferencePort {
         sb.append("- 처리 시각: ").append(now).append("\n");
         sb.append("- 실제 응답을 받으려면 vLLM 서버 실행 후 mock-enabled=false로 설정하세요.");
 
-        return sb.toString();
+        return new CompletionResult(sb.toString(), model);
     }
 
     private static boolean containsAny(String text, String... keywords) {

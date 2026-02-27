@@ -1,5 +1,6 @@
 package com.sleekydz86.kanana.interfaces.web;
 
+import com.sleekydz86.kanana.application.port.CompletionResult;
 import com.sleekydz86.kanana.application.usecase.LlmCompleteUseCase;
 import com.sleekydz86.kanana.interfaces.dto.CompleteRequestDto;
 import jakarta.validation.Valid;
@@ -23,7 +24,10 @@ public class CompleteController {
     @PostMapping
     public ResponseEntity<Map<String, String>> complete(@Valid @RequestBody CompleteRequestDto dto) {
         String modelId = dto.modelId() != null && !dto.modelId().isBlank() ? dto.modelId() : null;
-        String text = llmCompleteUseCase.execute(modelId, dto.message());
-        return ResponseEntity.ok(Map.of("content", text != null ? text : ""));
+        CompletionResult result = llmCompleteUseCase.execute(modelId, dto.message());
+        return ResponseEntity.ok(Map.of(
+                "content", result.content() != null ? result.content() : "",
+                "modelUsed", result.modelUsed() != null ? result.modelUsed() : ""
+        ));
     }
 }
