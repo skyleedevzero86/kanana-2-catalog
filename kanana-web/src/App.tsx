@@ -1,17 +1,21 @@
-import { Routes, Route } from 'react-router-dom'
-import Layout from './components/Layout'
-import HomePage from './pages/HomePage'
-import NotFoundPage from './pages/NotFoundPage'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Layout } from '@/components/Layout';
+import { HomePage } from '@/pages/HomePage';
+import { ModelListPage } from '@/pages/ModelListPage';
+import { ModelDetailPage } from '@/pages/ModelDetailPage';
+import { CompletePage } from '@/pages/CompletePage';
 
-function App() {
+export default function App() {
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Route>
-    </Routes>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<HomePage />} />
+          <Route path="models" element={<ModelListPage />} />
+          <Route path="models/:id" element={<ModelDetailPage />} />
+          <Route path="complete" element={<CompletePage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
-
-export default App

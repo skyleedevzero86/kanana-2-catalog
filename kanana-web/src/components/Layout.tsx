@@ -1,24 +1,19 @@
-import { Outlet, Link } from 'react-router-dom'
-import styles from './Layout.module.css'
+import { Link, Outlet } from 'react-router-dom';
 
-function Layout() {
+export function Layout() {
   return (
-    <div className={styles.wrapper}>
-      <header className={styles.header}>
-        <div className={styles.headerInner}>
-          <Link to="/" className={styles.logo}>
-            Kanana
-          </Link>
-          <nav className={styles.nav}>
-            <Link to="/">홈</Link>
-          </nav>
-        </div>
+    <div className="layout">
+      <header className="header">
+        <Link to="/" className="logo">Kanana-2</Link>
+        <nav>
+          <Link to="/">홈</Link>
+          <Link to="/models">모델 목록</Link>
+          <Link to="/complete">인퍼런스</Link>
+        </nav>
       </header>
-      <main className={styles.main}>
+      <main className="main">
         <Outlet />
       </main>
     </div>
-  )
+  );
 }
-
-export default Layout
