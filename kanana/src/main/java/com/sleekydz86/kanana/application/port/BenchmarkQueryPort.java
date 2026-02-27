@@ -1,5 +1,7 @@
 package com.sleekydz86.kanana.application.port;
 
+import com.sleekydz86.kanana.domain.benchmark.BenchmarkCategory;
+import com.sleekydz86.kanana.domain.benchmark.BenchmarkResult;
 import java.util.List;
 
 public interface BenchmarkQueryPort {

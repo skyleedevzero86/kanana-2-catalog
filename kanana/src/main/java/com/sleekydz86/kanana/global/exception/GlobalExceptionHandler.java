@@ -1,6 +1,5 @@
 package com.sleekydz86.kanana.global.exception;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -19,12 +17,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex) {
-        List<ErrorResponse.FieldErrorDto> errors = ex.getBindingResult().getFieldErrors().stream()
-                .map(fe -> new ErrorResponse.FieldErrorDto(fe.getField(), fe.getDefaultMessage()))
-                .collect(Collectors.toList());
-        ErrorResponse body = ErrorResponse.of("입력값을 확인해 주세요.", errors);
+        List<FieldErrorDto> errors = ex.getBindingResult().getFieldErrors().stream()
+                .map(fe -> new FieldErrorDto(fe.getField(), fe.getDefaultMessage()))
+                .toList();
         log.warn("요청 검증 실패: {}", errors);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ErrorResponse.of("입력값을 확인해 주세요.", errors));
     }
 
     @ExceptionHandler(LlmInferenceException.class)
@@ -33,7 +31,8 @@ public class GlobalExceptionHandler {
         if (ex.getCause() != null) {
             log.debug("원인", ex.getCause());
         }
-        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(ErrorResponse.of(ex.getMessage(), "LLM_INFERENCE_ERROR"));
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+                .body(ErrorResponse.of(ex.getMessage(), "LLM_INFERENCE_ERROR"));
     }
 
     @ExceptionHandler(Exception.class)

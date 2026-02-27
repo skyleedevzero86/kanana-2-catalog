@@ -1,7 +1,8 @@
 package com.sleekydz86.kanana.application.usecase;
 
 import com.sleekydz86.kanana.application.port.BenchmarkQueryPort;
-
+import com.sleekydz86.kanana.domain.benchmark.BenchmarkCategory;
+import com.sleekydz86.kanana.domain.benchmark.BenchmarkResult;
 import java.util.List;
 
 public class GetBenchmarksForModelUseCase {

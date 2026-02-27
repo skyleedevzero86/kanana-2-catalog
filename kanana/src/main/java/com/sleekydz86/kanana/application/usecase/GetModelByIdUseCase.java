@@ -1,7 +1,7 @@
 package com.sleekydz86.kanana.application.usecase;
 
 import com.sleekydz86.kanana.application.port.ModelRepositoryPort;
-
+import com.sleekydz86.kanana.domain.model.KananaModel;
 import java.util.Optional;
 
 public class GetModelByIdUseCase {

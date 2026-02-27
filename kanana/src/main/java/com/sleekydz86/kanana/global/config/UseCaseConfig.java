@@ -4,6 +4,7 @@ import com.sleekydz86.kanana.application.port.BenchmarkQueryPort;
 import com.sleekydz86.kanana.application.port.LlmInferencePort;
 import com.sleekydz86.kanana.application.port.ModelRepositoryPort;
 import com.sleekydz86.kanana.application.port.ServingPresetPort;
+import com.sleekydz86.kanana.application.usecase.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

@@ -1,5 +1,6 @@
 package com.sleekydz86.kanana.application.port;
 
+import com.sleekydz86.kanana.domain.model.KananaModel;
 import java.util.List;
 import java.util.Optional;
 

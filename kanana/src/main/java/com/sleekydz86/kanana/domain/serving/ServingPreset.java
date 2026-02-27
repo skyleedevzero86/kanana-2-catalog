@@ -1,11 +1,8 @@
 package com.sleekydz86.kanana.domain.serving;
 
-
 import java.util.Objects;
 
 public final class ServingPreset {
-
-    public enum Backend { VLLM, SGLANG }
 
     private final String modelId;
     private final Backend backend;

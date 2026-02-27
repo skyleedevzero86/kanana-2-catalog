@@ -1,6 +1,7 @@
 package com.sleekydz86.kanana.application.usecase;
 
 import com.sleekydz86.kanana.application.port.ServingPresetPort;
+import com.sleekydz86.kanana.domain.serving.ServingPreset;
 
 import java.util.Optional;
 
