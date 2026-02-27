@@ -1,0 +1,24 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.code {
+  font-size: 5rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.message {
+  font-size: 1.25rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.link {
+  font-weight: 500;
+}
