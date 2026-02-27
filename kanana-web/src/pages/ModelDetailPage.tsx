@@ -71,7 +71,6 @@ function ModelDetailPage() {
         {model.supportsToolCalling && <span className="badge">Tool Calling</span>}
       </div>
 
-      {/* 기본 정보 */}
       <section className="spec-section">
         <h2>기본 정보</h2>
         <dl className="spec-list">
@@ -90,7 +89,6 @@ function ModelDetailPage() {
         </dl>
       </section>
 
-      {/* 모델 사양 */}
       <section className="spec-section">
         <h2>모델 사양</h2>
         <dl className="spec-list">
@@ -113,7 +111,6 @@ function ModelDetailPage() {
         </dl>
       </section>
 
-      {/* 벤치마크 */}
       <section className="benchmark-section">
         <h2>벤치마크 결과</h2>
         <div style={{ marginBottom: '1rem' }}>
@@ -190,7 +187,6 @@ function ModelDetailPage() {
         )}
       </section>
 
-      {/* 서빙 설정 */}
       <section className="spec-section">
         <h2>서빙 프리셋</h2>
         {servingLoading && <Loading />}
