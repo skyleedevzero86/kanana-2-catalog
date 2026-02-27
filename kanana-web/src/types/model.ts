@@ -2,8 +2,10 @@ export interface ModelSpecDto {
   totalParameters: string;
   activatedParameters: string;
   layers: number;
+  denseLayers: number;
   experts: number;
   selectedExperts: number;
+  sharedExperts: number;
   attentionMechanism: string;
   vocabularySize: number;
   contextLength: number;
@@ -32,6 +34,7 @@ export interface ServingPresetDto {
   modelId: string;
   backend: string;
   commandTemplate: string;
+  sglangCommandTemplate: string;
   reasoningParser: string;
   toolCallParser: string;
   minGpuMemoryMb: number;

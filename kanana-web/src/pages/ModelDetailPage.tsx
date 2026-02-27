@@ -97,11 +97,13 @@ function ModelDetailPage() {
           <dt>활성 파라미터</dt>
           <dd>{model.spec.activatedParameters}</dd>
           <dt>레이어 수</dt>
-          <dd>{model.spec.layers}</dd>
+          <dd>{model.spec.layers} (Dense: {model.spec.denseLayers})</dd>
           <dt>전문가 수</dt>
           <dd>{model.spec.experts}</dd>
           <dt>선택된 전문가</dt>
           <dd>{model.spec.selectedExperts}</dd>
+          <dt>공유 전문가</dt>
+          <dd>{model.spec.sharedExperts}</dd>
           <dt>어텐션 메커니즘</dt>
           <dd>{model.spec.attentionMechanism}</dd>
           <dt>어휘 크기</dt>
@@ -217,7 +219,7 @@ function ModelDetailPage() {
             </dl>
             <div style={{ marginTop: '1rem' }}>
               <p style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', marginBottom: '0.5rem' }}>
-                실행 명령어:
+                vLLM 실행 명령어:
               </p>
               <pre
                 style={{
@@ -234,6 +236,27 @@ function ModelDetailPage() {
                 <code>{preset.commandTemplate}</code>
               </pre>
             </div>
+            {preset.sglangCommandTemplate && (
+              <div style={{ marginTop: '0.75rem' }}>
+                <p style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', marginBottom: '0.5rem' }}>
+                  SGLang 실행 명령어:
+                </p>
+                <pre
+                  style={{
+                    background: '#0d0d10',
+                    border: '1px solid var(--color-border)',
+                    borderRadius: 'var(--radius)',
+                    padding: '1rem',
+                    fontSize: '0.85rem',
+                    overflowX: 'auto',
+                    whiteSpace: 'pre-wrap',
+                    wordBreak: 'break-all',
+                  }}
+                >
+                  <code>{preset.sglangCommandTemplate}</code>
+                </pre>
+              </div>
+            )}
           </>
         )}
       </section>

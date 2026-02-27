@@ -10,6 +10,28 @@ interface Message {
   text: string;
 }
 
+const warnStyle: React.CSSProperties = {
+  fontSize: '0.83rem',
+  background: 'rgba(245, 158, 11, 0.1)',
+  border: '1px solid rgba(245, 158, 11, 0.35)',
+  color: '#fcd34d',
+  borderRadius: 'var(--radius)',
+  padding: '0.55rem 0.85rem',
+  marginTop: '0.4rem',
+  lineHeight: 1.55,
+};
+
+const hintStyle: React.CSSProperties = {
+  fontSize: '0.83rem',
+  color: 'var(--color-text-muted)',
+  marginTop: '-0.5rem',
+  marginBottom: '1rem',
+};
+
+function isVllmOnlyModel(modelId: string) {
+  return modelId.startsWith('kanana-');
+}
+
 function CompletePage() {
   const [searchParams] = useSearchParams();
   const { models, loading: modelsLoading } = useModels();
@@ -18,6 +40,7 @@ function CompletePage() {
   const [selectedModel, setSelectedModel] = useState(searchParams.get('model') ?? '');
   const [message, setMessage] = useState('');
   const [history, setHistory] = useState<Message[]>([]);
+  const [lastMessage, setLastMessage] = useState('');
 
   useEffect(() => {
     const param = searchParams.get('model');
@@ -35,6 +58,7 @@ function CompletePage() {
     const trimmed = message.trim();
     if (!trimmed || completing) return;
 
+    setLastMessage(trimmed);
     setHistory((prev) => [...prev, { role: 'user', text: trimmed }]);
     submit({
       modelId: selectedModel || undefined,
@@ -46,12 +70,29 @@ function CompletePage() {
   const handleReset = () => {
     setHistory([]);
     setMessage('');
+    setLastMessage('');
     reset();
+  };
+
+  const handleSwitchToDefault = () => {
+    setSelectedModel('');
+    reset();
+    if (lastMessage) {
+      setHistory((prev) => [...prev, { role: 'user', text: lastMessage }]);
+      submit({ message: lastMessage });
+    }
   };
 
   const instructModels = models.filter(
     (m) => m.variant === 'INSTRUCT' || m.variant === 'THINKING'
   );
+
+  const showVllmWarning = selectedModel !== '' && isVllmOnlyModel(selectedModel);
+
+  const isVllmError =
+    error !== null &&
+    (error.message.includes('모델을 찾을 수 없습니다') ||
+      (error.message.includes('거부되었습니다') && error.message.includes('404')));
 
   return (
     <div className="page">
@@ -66,18 +107,28 @@ function CompletePage() {
           {modelsLoading ? (
             <Loading />
           ) : (
-            <select
-              id="model-select"
-              value={selectedModel}
-              onChange={(e) => setSelectedModel(e.target.value)}
-            >
-              <option value="">기본 모델 사용</option>
-              {instructModels.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.name} ({m.variant})
-                </option>
-              ))}
-            </select>
+            <>
+              <select
+                id="model-select"
+                value={selectedModel}
+                onChange={(e) => { setSelectedModel(e.target.value); reset(); }}
+              >
+                <option value="">기본 모델 사용 (현재 설정된 외부 API)</option>
+                <optgroup label="로컬 vLLM 전용 ↓">
+                  {instructModels.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.name} ({m.variant})
+                    </option>
+                  ))}
+                </optgroup>
+              </select>
+              {showVllmWarning && (
+                <p style={warnStyle}>
+                  ⚠️ <strong>로컬 vLLM 전용 모델</strong>입니다. Groq 등 외부 API에서는 이 모델 ID를 인식하지 못해 오류가 발생합니다.
+                  {' '}외부 API를 사용하려면 <strong>기본 모델 사용</strong>을 선택하세요.
+                </p>
+              )}
+            </>
           )}
         </div>
 
@@ -107,17 +158,49 @@ function CompletePage() {
       {error && (
         <div>
           <ErrorAlert error={error} />
-          {error.message.includes('LLM') && (
-            <p style={{
-              fontSize: '0.85rem',
-              color: 'var(--color-text-muted)',
-              marginTop: '-0.5rem',
-              marginBottom: '1rem',
-            }}>
-              vLLM 서버가 <code>localhost:8000</code>에서 실행 중인지 확인하세요.
-              LLM 서버 없이는 인퍼런스 기능을 사용할 수 없습니다.
+          {isVllmError && (
+            <div style={{ ...hintStyle, marginTop: 0, marginBottom: '1rem' }}>
+              <p style={{ margin: '0 0 0.6rem' }}>
+                선택한 Kanana 모델은 <strong>로컬 vLLM 서버 전용</strong>입니다. 외부 API(Groq 등)에서는 이 모델 ID를 인식하지 못합니다.
+                {' '}로컬 vLLM 서버를 실행하고 <code>LLM_INFERENCE_URL</code> 환경변수를 설정하거나,{' '}
+                아래 버튼으로 기본 모델(외부 API)을 사용하세요.
+              </p>
+              <button
+                type="button"
+                onClick={handleSwitchToDefault}
+                style={{
+                  padding: '0.4rem 0.9rem',
+                  background: 'rgba(245,158,11,0.15)',
+                  border: '1px solid rgba(245,158,11,0.4)',
+                  color: '#fcd34d',
+                  borderRadius: 'var(--radius)',
+                  cursor: 'pointer',
+                  fontSize: '0.83rem',
+                  fontWeight: 600,
+                }}
+              >
+                기본 모델로 전환하여 재시도
+              </button>
+            </div>
+          )}
+          {!isVllmError && error.message.includes('연결할 수 없습니다') && (
+            <p style={hintStyle}>
+              LLM 서버에 연결할 수 없습니다. 서버가 실행 중인지, 백엔드 설정의{' '}
+              <code>LLM_INFERENCE_URL</code>이 올바른지 확인하세요.
             </p>
           )}
+          {!isVllmError && error.message.includes('인증에 실패했습니다') && (
+            <p style={hintStyle}>
+              LLM 서버 인증에 실패했습니다. <code>LLM_API_KEY</code> 환경변수를 확인하세요.
+            </p>
+          )}
+          {!isVllmError &&
+            error.message.includes('거부되었습니다') &&
+            !error.message.includes('404') && (
+              <p style={hintStyle}>
+                LLM 서버가 요청을 거부했습니다. API 키와 요청 형식이 올바른지 확인하세요.
+              </p>
+            )}
         </div>
       )}
 

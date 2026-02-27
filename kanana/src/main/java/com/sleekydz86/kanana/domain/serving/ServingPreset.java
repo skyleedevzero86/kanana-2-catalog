@@ -7,6 +7,7 @@ public final class ServingPreset {
     private final String modelId;
     private final Backend backend;
     private final String commandTemplate;
+    private final String sglangCommandTemplate;
     private final String reasoningParser;
     private final String toolCallParser;
     private final long minGpuMemoryMb;
@@ -15,6 +16,7 @@ public final class ServingPreset {
         this.modelId = b.modelId;
         this.backend = b.backend;
         this.commandTemplate = b.commandTemplate;
+        this.sglangCommandTemplate = b.sglangCommandTemplate;
         this.reasoningParser = b.reasoningParser;
         this.toolCallParser = b.toolCallParser;
         this.minGpuMemoryMb = b.minGpuMemoryMb;
@@ -27,6 +29,7 @@ public final class ServingPreset {
     public String getModelId() { return modelId; }
     public Backend getBackend() { return backend; }
     public String getCommandTemplate() { return commandTemplate; }
+    public String getSglangCommandTemplate() { return sglangCommandTemplate; }
     public String getReasoningParser() { return reasoningParser; }
     public String getToolCallParser() { return toolCallParser; }
     public long getMinGpuMemoryMb() { return minGpuMemoryMb; }
@@ -35,6 +38,7 @@ public final class ServingPreset {
         private String modelId;
         private Backend backend = Backend.VLLM;
         private String commandTemplate;
+        private String sglangCommandTemplate;
         private String reasoningParser;
         private String toolCallParser = "hermes";
         private long minGpuMemoryMb = 60_000L;
@@ -42,6 +46,7 @@ public final class ServingPreset {
         public Builder modelId(String v) { modelId = v; return this; }
         public Builder backend(Backend v) { backend = v; return this; }
         public Builder commandTemplate(String v) { commandTemplate = v; return this; }
+        public Builder sglangCommandTemplate(String v) { sglangCommandTemplate = v; return this; }
         public Builder reasoningParser(String v) { reasoningParser = v; return this; }
         public Builder toolCallParser(String v) { toolCallParser = v; return this; }
         public Builder minGpuMemoryMb(long v) { minGpuMemoryMb = v; return this; }

@@ -6,6 +6,7 @@ public record ServingPresetDto(
         String modelId,
         String backend,
         String commandTemplate,
+        String sglangCommandTemplate,
         String reasoningParser,
         String toolCallParser,
         long minGpuMemoryMb
@@ -15,6 +16,7 @@ public record ServingPresetDto(
                 p.getModelId(),
                 p.getBackend().name(),
                 p.getCommandTemplate(),
+                p.getSglangCommandTemplate() != null ? p.getSglangCommandTemplate() : "",
                 p.getReasoningParser() != null ? p.getReasoningParser() : "",
                 p.getToolCallParser(),
                 p.getMinGpuMemoryMb()

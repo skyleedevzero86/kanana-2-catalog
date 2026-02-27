@@ -16,6 +16,7 @@ public class ServingPresetProvider implements ServingPresetPort {
             ServingPreset.builder()
                     .modelId("kanana-2-30b-a3b-instruct-2601")
                     .commandTemplate("vllm serve kakaocorp/kanana-2-30b-a3b-instruct-2601 --enable-auto-tool-choice --tool-call-parser hermes")
+                    .sglangCommandTemplate("python3 -m sglang.launch_server --model-path kakaocorp/kanana-2-30b-a3b-instruct-2601 --tool-call-parser qwen")
                     .toolCallParser("hermes")
                     .minGpuMemoryMb(60_000L)
                     .build(),
@@ -23,6 +24,7 @@ public class ServingPresetProvider implements ServingPresetPort {
             ServingPreset.builder()
                     .modelId("kanana-2-30b-a3b-thinking-2601")
                     .commandTemplate("vllm serve kakaocorp/kanana-2-30b-a3b-thinking-2601 --reasoning-parser deepseek_r1 --enable-auto-tool-choice --tool-call-parser hermes")
+                    .sglangCommandTemplate("python3 -m sglang.launch_server --model-path kakaocorp/kanana-2-30b-a3b-thinking-2601 --reasoning-parser deepseek-r1 --tool-call-parser qwen")
                     .reasoningParser("deepseek_r1")
                     .toolCallParser("hermes")
                     .minGpuMemoryMb(60_000L)
